@@ -5,6 +5,8 @@ import com.tybootcamp.ecomm.enums.Gender;
 
 import java.util.Date;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -12,19 +14,15 @@ import javax.validation.constraints.NotNull;
 public class Profile
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne
-    @JoinColumn(nullable = false)
-    @MapsId
-    @JsonIgnore
-    private Seller seller;
-
 
     @OneToOne
-    @JoinColumn(nullable = false)
-    @MapsId
+    @JoinTable(name = "UserProfile",
+               joinColumns = {@JoinColumn(name = "profileId", referencedColumnName = "id") },
+               inverseJoinColumns = {@JoinColumn(name = "userId", referencedColumnName = "id") })
     @JsonIgnore
-    private Customer customer;
+    private User user;
 
     @NotNull
     private String firstName;
@@ -46,7 +44,7 @@ public class Profile
 
     public Profile(Seller seller, String firstName, String lastName, Gender gender)
     {
-        this.seller = seller;
+        //this.seller = seller;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -60,16 +58,6 @@ public class Profile
     public void setId(long id)
     {
         this.id = id;
-    }
-
-    public Seller getSeller()
-    {
-        return seller;
-    }
-
-    public void setSeller(Seller seller)
-    {
-        this.seller = seller;
     }
 
     public String getFirstName()
@@ -140,5 +128,13 @@ public class Profile
     public void setGender(Gender gender)
     {
         this.gender = gender;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
